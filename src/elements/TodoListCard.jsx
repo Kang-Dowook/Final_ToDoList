@@ -1,7 +1,9 @@
+// eslint-disable-next-line
+
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { __deleteTodo, __getTodoList } from "../redux/modules/todoListSlice";
+import { __deleteTodo } from "../redux/modules/todoListSlice";
 import { useDispatch } from "react-redux/es/exports";
 import { __deleteCommentsById } from "../redux/modules/commentListSlice";
 import Button from "./Button";
@@ -16,8 +18,7 @@ const TodoListCard = ({ todo }) => {
 
     if (result === true) {
       dispatch(__deleteTodo(todo.id));
-      dispatch(__getTodoList());
-      dispatch(__deleteCommentsById(todo.id));
+      // dispatch(__deleteCommentsById(todo.id));
     }
   };
 
@@ -28,7 +29,9 @@ const TodoListCard = ({ todo }) => {
           <div className="title">{todo.title}</div>
           <div className="user">작성자 : {todo.user}</div>
         </div>
-        <Button onClick={onClick} size="medium">삭제</Button>
+        <Button onClick={onClick} size="medium" className="button">
+          삭제
+        </Button>
       </div>
     </StTodoListCard>
   );
@@ -45,6 +48,10 @@ const StTodoListCard = styled.div`
   margin-bottom: 10px;
   border-radius: 8px;
   cursor: pointer;
+  &:hover {
+    box-shadow: rgb(0 0 0 / 10%) 4px 6px 5px;
+    /* background-color: pink; */
+  }
   .flexBox {
     /* background-color: royalblue; */
     display: flex;

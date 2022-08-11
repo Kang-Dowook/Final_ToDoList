@@ -1,20 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const todoServer = process.env.REACT_APP_TODOS;
+
 const initialState = {
   todos: [],
   isLoading: false,
   error: null,
+  status: 0,
 };
 
 export const __getTodoList = createAsyncThunk(
   "__getTodoList",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get("http://localhost:3001/todos");
+      const data = await axios.get(todoServer);
       return thunkAPI.fulfillWithValue(data.data);
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -23,11 +26,11 @@ export const __deleteTodo = createAsyncThunk(
   "__deleteTodo",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.delete(`http://localhost:3001/todos/${payload}`);
-      console.log("data", data.data);
-      thunkAPI.fulfillWithValue(data.data);
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
+      await axios.delete(todoServer + `/${payload}`);
+      const deletedRes = await axios.get(todoServer);
+      return thunkAPI.fulfillWithValue(deletedRes.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -56,6 +59,7 @@ const todoListSlice = createSlice({
     },
     [__deleteTodo.fulfilled]: (state, action) => {
       state.isLoading = false;
+      state.todos = action.payload;
     },
     [__deleteTodo.rejected]: (state, action) => {
       state.isLoading = false;

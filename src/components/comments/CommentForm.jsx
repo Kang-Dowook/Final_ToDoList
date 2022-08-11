@@ -10,7 +10,6 @@ import Input from "../../elements/Input";
 
 const CommentForm = () => {
   const dispatch = useDispatch();
-
   const { id } = useParams();
 
   const [inputs, setInputs] = useState({
@@ -34,10 +33,7 @@ const CommentForm = () => {
         ...inputs,
       })
     );
-    setInputs({
-      user: "",
-      desc: "",
-    });
+    setInputs({ ...inputs, user: "", desc: "" });
   };
 
   return (
